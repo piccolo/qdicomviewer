@@ -1,0 +1,153 @@
+PROJECT(qdicomwidget)
+
+cmake_minimum_required(VERSION 2.6)
+
+MESSAGE("Searching Qt Library")
+FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui REQUIRED)
+IF(QT_FOUND)
+	INCLUDE(${QT_USE_FILE})
+	MESSAGE(" Qt include path: " ${QT_INCLUDE_DIR})
+	MESSAGE(" Qt library path: " ${QT_LIBRARIES})
+	MESSAGE(" Qt OpenGL include path: " ${QT_QTOPENGL_INCLUDE_DIR})
+	MESSAGE(" Qt OpenGL library path: " ${QT_QTOPENGL_LIBRARY})
+ENDIF(QT_FOUND)
+
+
+# A FAIRE : Remplacer QT_INCLUDE_DIR par QT_QtCore_INCLUDE_DIR et QT_QtGui_INCLUDE_DIR
+# Idem pour les lib
+
+INCLUDE_DIRECTORIES(
+  ${CMAKE_SOURCE_DIR}/include
+  ${CMAKE_SOURCE_DIR}src
+  ${QT_INCLUDE_DIR}
+  ${QT_QTOPENGL_INCLUDE_DIR}
+)
+
+
+MESSAGE("Searching DCMTK Library")
+FIND_PACKAGE(DCMTK REQUIRED )
+IF(DCMTK_FOUND)
+  MESSAGE("DCMTK FOUND")
+  MESSAGE(" DCMTK LIBRARY PATH " ${DCMTK_LIBRARIES})
+  MESSAGE(" DCMTK INCLUDE PATH " ${DCMTK_INCLUDE_DIR})  
+ENDIF(DCMTK_FOUND)
+
+FIND_PACKAGE(ZLIB REQUIRED)
+
+INCLUDE_DIRECTORIES(
+  ${DCMTK_INCLUDE_DIR}
+#  ${DCMTK_DIR}/include
+  "/opt/local/include"
+  ${ZLIB_INCLUDE_DIRS}
+)
+
+IF(WIN32)	
+	#REMOVE_DEFINITIONS(-DIM_EXPORTS)
+	ADD_DEFINITIONS(-D_UWIN /MTd)
+	#INCLUDE_DIRECTORIES(${DCMTK_DIR}/include)
+ENDIF(WIN32)
+
+
+#IF(WIN32)
+#    REMOVE_DEFINITIONS(-DIM_EXPORTS)
+#ENDIF(WIN32)
+
+
+SET(qdicomwidget_SRCS
+  src/main.cpp
+  src/qdicomimagewidget.cpp
+  src/dicom_image.cpp
+  )
+
+SET(qdicomwidget_RCS
+  src/application.qrc
+)
+
+SET(qdicomwidget_QT_HEADER
+#  src/mainwindow.h
+  #src/imageviewer.h
+  include/qdicomimagewidget.h
+  
+ )
+MESSAGE(${DCMTK_LIBRARIES})
+
+MESSAGE(${CMAKE_SYSTEM_NAME})
+IF("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin") 
+  SET(DCMTK_LIBS 
+    #${DCMTK_LIBRARIES}
+     ${DCMTK_ijg16_LIBRARY}
+     ${DCMTK_ijg12_LIBRARY}
+     ${DCMTK_ijg8_LIBRARY}
+     ${DCMTK_dcmjpeg_LIBRARY}
+     ${DCMTK_dcmimgle_LIBRARY}  
+     ${DCMTK_dcmimage_LIBRARY}
+     ${DCMTK_oflog_LIBRARY}
+     ${DCMTK_ofstd_LIBRARY}
+     ${DCMTK_dcmdata_LIBRARY}
+	  )
+ENDIF("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
+MESSAGE(${DCMTK_LIBS})
+IF("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+  SET(DCMTK_LIBS 
+   ${DCMTK_dcmdata_LIBRARY}
+   ${DCMTK_oflog_LIBRARY}    
+   ${DCMTK_ofstd_LIBRARY}
+   ${DCMTK_dcmimage_LIBRARY}
+   ${DCMTK_dcmimgle_LIBRARY}  
+   ${DCMTK_dcmjpeg_LIBRARY}
+   ${DCMTK_ijg8_LIBRARY}
+   ${DCMTK_ijg12_LIBRARY}
+   ${DCMTK_ijg16_LIBRARY}
+   )
+ENDIF("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+
+IF(WIN32)
+  MESSAGE("WIN32")
+  SET(DCMTK_LIBS 
+    ${DCMTK_dcmdata_LIBRARY}
+    ${DCMTK_oflog_LIBRARY}    
+    ${DCMTK_ofstd_LIBRARY}
+    ${DCMTK_dcmimage_LIBRARY}
+    ${DCMTK_dcmimgle_LIBRARY}  
+    ${DCMTK_dcmjpeg_LIBRARY}
+    ${DCMTK_ijg8_LIBRARY}
+    ${DCMTK_ijg12_LIBRARY}
+    ${DCMTK_ijg16_LIBRARY}
+    "netapi32.lib"
+    "wsock32.lib"
+    )
+ENDIF(WIN32)
+
+SET(LINK_LIBRARIES
+  ${QT_LIBRARIES}
+  ${QT_QTOPENGL_LIBRARY}
+  ${DCMTK_LIBS}
+  ${ZLIB_LIBRARIES}
+)
+
+#INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/src)
+ADD_DEFINITIONS(-g -Wall -Wno-deprecated -DQT_DEBUG -DHAVE_CONFIG)
+
+# this command will generate rules that will run rcc on all files from VisualTiff_RCS
+# in result VisualTiff_RC_SRCS variable will contain paths to files produced by rcc
+QT4_ADD_RESOURCES(qdicomwidget_RC_SRCS ${qdicomwidget_RCS} )
+
+# tell cmake to create .moc files for all files in the variable VisualTiff_SRCS that require such a file.
+QT4_WRAP_CPP(qdicomwidget_MOC_SRCS ${qdicomwidget_QT_HEADER})
+
+
+IF (APPLE) 
+  ADD_EXECUTABLE(qdicomwidget MACOSX_BUNDLE ${qdicomwidget_SRCS} ${qdicomwidget_MOC_SRCS} ${qdicomwidget_RC_SRCS})
+  ADD_CUSTOM_COMMAND(TARGET qdicomwidget POST_BUILD
+    COMMAND mkdir ARGS ${CMAKE_CURRENT_BINARY_DIR}/qdicomwidget.app/Contents/Resources
+    )
+  SET_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_BINARY_DIR}/qdicomwidget.app)
+  #ADD_CUSTOM_COMMAND(TARGET clean POST_BUILD
+   # COMMAND rm ARGS -rf ${CMAKE_CURRENT_BINARY_DIR}/qdicomwidget.app
+   # )
+  
+ELSE(APPLE)
+   ADD_EXECUTABLE(qdicomwidget  ${qdicomwidget_SRCS} ${qdicomwidget_MOC_SRCS} ${qdicomwidget_RC_SRCS})
+ENDIF(APPLE)  
+
+TARGET_LINK_LIBRARIES(qdicomwidget ${LINK_LIBRARIES})

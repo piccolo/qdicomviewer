@@ -1,0 +1,11 @@
+* TODO [#B] add dicom properties class
+** TODO [#B] Patient properties
+** TODO [#B] Image properties
+
+* TODO [#A] Load dicom folder
+** TODO [#A] std::vector of dicom_image 
+** TODO [#A] add slider to change image 
+*** TODO [#A] vertical slider for slice selection
+*** TODO [#A] horizontal slide for time selection 
+
+* TODO [#B] Load DicomDir file

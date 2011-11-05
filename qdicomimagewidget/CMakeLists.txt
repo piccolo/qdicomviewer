@@ -4,19 +4,22 @@ project(qdicomimagewidget)
 # Idem pour les lib
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}include
-  ${CMAKE_SOURCE_DIR}src
+  ${CMAKE_SOURCE_DIR}/include
+  ${CMAKE_SOURCE_DIR}/src
   ${QT_INCLUDE_DIR}
   ${QT_QTOPENGL_INCLUDE_DIR}
 )
 
 include_directories(
-  ${DCMTK_INCLUDE_DIR}
+  #${DCMTK_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-#  ${DCMTK_DIR}/include
+  ${CMAKE_SOURCE_DIR}/dicom/include
   "/opt/local/include"
-  ${ZLIB_INCLUDE_DIRS}
+  ${DCMTK_INCLUDE_DIR}
+  #${ZLIB_INCLUDE_DIRS}
 )
+
+message(${CMAKE_SOURCE_DIR})
 
 IF(WIN32)	
   #REMOVE_DEFINITIONS(-DIM_EXPORTS)
@@ -39,11 +42,12 @@ set(${PROJECT_NAME}_QT_HEADER
 set(LINK_LIBRARIES
   ${QT_LIBRARIES}
   ${QT_QTOPENGL_LIBRARY}
-  ${DCMTK_LIBS}
+ # ${DCMTK_LIBS}
+ dicom
   ${ZLIB_LIBRARIES}
 )
 #INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/src)
-add_definitions(-g -Wall -Wno-deprecated -DQT_DEBUG -DHAVE_CONFIG)
+add_definitions(-g -Wall -Wno-deprecated -DQT_DEBUG) # -DHAVE_CONFIG)
 
 # this command will generate rules that will run rcc on all files from VisualTiff_RCS
 # in result VisualTiff_RC_SRCS variable will contain paths to files produced by rcc

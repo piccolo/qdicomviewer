@@ -69,7 +69,7 @@ IF(WIN32)
     )
 ENDIF(WIN32)
 
-#add_subdirectories(dicom)
+add_subdirectory(dicom)
 
 add_subdirectory(qdicomimagewidget)
 

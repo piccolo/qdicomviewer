@@ -73,6 +73,7 @@ add_subdirectory(dicom)
 
 add_subdirectory(qdicomimagewidget)
 
+add_subdirectory(qdicomfolderwidget)
 #add_subdirectories(test)
 
 add_custom_target(distclean COMMAND rm -rf *) 

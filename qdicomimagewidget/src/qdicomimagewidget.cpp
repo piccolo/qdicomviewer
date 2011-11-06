@@ -28,7 +28,7 @@
 #include "qdicomimagewidget.h"
 #include "dicom_image.h"
 #include <QDebug>
-#include<QPainter>
+#include <QPainter>
 
 qdicomimagewidget::qdicomimagewidget( QString filename,QWidget *parent)
    : QWidget(parent), _filename(filename)

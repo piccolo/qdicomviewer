@@ -57,6 +57,7 @@ class qdicomimagewidget : public QWidget
  public:
    qdicomimagewidget(QString f,QWidget *parent = 0 );
    
+   void setImage(QString filename);
    void paintEvent(QPaintEvent*);
    
    QPoint _lastMousePosition;

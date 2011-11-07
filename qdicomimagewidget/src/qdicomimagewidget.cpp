@@ -34,10 +34,14 @@ qdicomimagewidget::qdicomimagewidget( QString filename,QWidget *parent)
    : QWidget(parent), _filename(filename)
 {
    qDebug() << "filename " << filename;
+   setImage(filename);
+}
+
+void qdicomimagewidget::setImage(QString filename) {
+   _filename = filename;
    _dcmimage = new dicom_image(filename.toStdString().c_str());
    qDebug() << _dcmimage->get_width() << " x " << _dcmimage->get_height();
    setFixedSize(_dcmimage->get_width(), _dcmimage->get_height());
-   _qimagebuffer = NULL;
    _qimagesize = _dcmimage->get_width() * _dcmimage->get_height();
    _qimagebuffer = new uchar[_qimagesize];
    _dcmimage->get_image()->setMinMaxWindow();
@@ -45,7 +49,6 @@ qdicomimagewidget::qdicomimagewidget( QString filename,QWidget *parent)
    _dcmimage->get_image()->getOutputData(_qimagebuffer,_qimagesize,8);
    _qimage= QImage(_qimagebuffer, _dcmimage->get_width(), _dcmimage->get_height(), QImage::Format_Indexed8);
 }
-
 
 void qdicomimagewidget::paintEvent(QPaintEvent* e) {
    QPainter painter(this);

@@ -12,6 +12,7 @@ class qdicomfolderwidget : public QWidget {
   Q_OBJECT
   
 private: 
+  
   bool load_folder();
   
   QString _folder;
@@ -21,7 +22,6 @@ private:
   qdicomfolderwidget(QString f, QWidget* parent=0);
   
   
-    
-    };
+};
 
 #endif 

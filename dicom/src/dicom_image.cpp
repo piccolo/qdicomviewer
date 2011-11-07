@@ -31,13 +31,19 @@ dicom_image::dicom_image(const char* file)
 }
 
 bool dicom_image::load_image() {
+   printf("load image\n");
    _dcmFileFormat = new DcmFileFormat();
    OFCondition cond = _dcmFileFormat->loadFile(_file);
+   printf("cond \n");
    if (cond.good()) {
+      printf("cond.good() \n");
       _image = new DicomImage(_file);
+      printf("_image status %d \n", _image->getStatus());
       if (_image->getStatus() == EIS_Normal) {
+	 printf("glop EIS NORMAL \n");
 	 _width = _image->getWidth();
 	 _height = _image->getHeight();
+	 printf("toot %s %d %d \n ", _file,_width, _height);
 	 // const DiPixel* dmp=NULL;
 	 // dmp = _image->getInterData();
 	 // pixelData = new unsigned char[_width*height];
@@ -50,10 +56,13 @@ bool dicom_image::load_image() {
 	 // 	  *(_dcm_data++) = *(pixelData++);
 	 //       } 
 	 //    }
+	 //}
       }
-      
+      else printf("pas glop \n");
       
       //cout << "glop " << endl;
    }
+   else printf("cond\n");
+   printf("glop %s \n",_file);
 
 }

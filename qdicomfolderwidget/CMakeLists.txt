@@ -14,6 +14,7 @@ include_directories(
   #${DCMTK_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_SOURCE_DIR}/dicom/include
+  ${qdicomimagewidget_SOURCE_DIR}/include
   "/opt/local/include"
   ${DCMTK_INCLUDE_DIR}
   #${ZLIB_INCLUDE_DIRS}
@@ -23,8 +24,7 @@ include_directories(
 set(LINK_LIBRARIES
   ${QT_LIBRARIES}
   ${QT_QTOPENGL_LIBRARY}
- # ${DCMTK_LIBS}
- dicom
+  qdicomimagewidget
   ${ZLIB_LIBRARIES}
 )
 

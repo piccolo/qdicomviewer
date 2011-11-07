@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QString>
 #include <QDir>
+#include <QVBoxLayout>
 
 #include "qdicomfolderwidget.h"
 
@@ -9,9 +10,17 @@ qdicomfolderwidget::qdicomfolderwidget(QString folder, QWidget* parent)
 {
   qDebug() << "Folder name : "<< _folder << endl;
   if (load_folder()) qDebug() << "Glop \n";
-  
+  _dicomwidget = new qdicomimagewidget(_list.at(0).fileName(),parent);
+  qDebug() << _list.at(0).fileName();
+  // PROBLEME _dcmFileFormat->LoadFile(_file);
+  _slider = new QSlider(Qt::Horizontal);
+  _slider->setRange(0,_list.size());
+  _slider->setValue(0);
+  QVBoxLayout * layout = new QVBoxLayout;
+  layout->addWidget(_dicomwidget);
+  layout->addWidget(_slider);
+  setLayout(layout);
 } 
-
 
 bool qdicomfolderwidget::load_folder() {
   QDir dir(_folder);
@@ -23,11 +32,11 @@ bool qdicomfolderwidget::load_folder() {
   dir.setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
   //dir.setSorting(QDir::Size | QDir::Reversed);
 
-  QFileInfoList list = dir.entryInfoList();
+  _list = dir.entryInfoList();
   qDebug() << "     Bytes Filename";
-  qDebug() << list.size() ;
-  for (int i = 0; i < list.size(); ++i) {
-    QFileInfo fileInfo = list.at(i);
+  qDebug() << _list.size() ;
+  for (int i = 0; i < _list.size(); ++i) {
+    QFileInfo fileInfo = _list.at(i);
     qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10)
 			   .arg(fileInfo.fileName())) << "\n";
   }

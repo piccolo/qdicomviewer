@@ -30,16 +30,17 @@
 #include <QDebug>
 #include <QPainter>
 
-qdicomimagewidget::qdicomimagewidget( QString filename,QWidget *parent)
+qdicomimagewidget::qdicomimagewidget( QString filename, QWidget *parent)
    : QWidget(parent), _filename(filename)
 {
-   qDebug() << "filename " << filename;
-   setImage(filename);
+   qDebug() << "filename toto : " << filename;
+   setImage(_filename);
 }
 
 void qdicomimagewidget::setImage(QString filename) {
    _filename = filename;
-   _dcmimage = new dicom_image(filename.toStdString().c_str());
+   qDebug() << _filename.toStdString().c_str() << "\n";
+   _dcmimage = new dicom_image(_filename.toStdString().c_str());
    qDebug() << _dcmimage->get_width() << " x " << _dcmimage->get_height();
    setFixedSize(_dcmimage->get_width(), _dcmimage->get_height());
    _qimagesize = _dcmimage->get_width() * _dcmimage->get_height();
@@ -58,7 +59,6 @@ void qdicomimagewidget::paintEvent(QPaintEvent* e) {
 void qdicomimagewidget::mousePressEvent(QMouseEvent* e) {
    e->accept();
    _lastMousePosition = e->pos();
-   
 }
 
 void qdicomimagewidget::mouseMoveEvent(QMouseEvent* e) {

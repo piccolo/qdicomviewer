@@ -47,7 +47,7 @@ set(LINK_LIBRARIES
 qt4_wrap_cpp(${PROJECT_NAME}_MOC_SRCS ${${PROJECT_NAME}_QT_HEADER})
 
 #INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/src)
-add_definitions(-g -Wall -Wno-deprecated -DQT_DEBUG) # -DHAVE_CONFIG)
+add_definitions(-g -Wall -Wno-deprecated -DQT_DEBUG -DHAVE_CONFIG)
 
 # this command will generate rules that will run rcc on all files from VisualTiff_RCS
 # in result VisualTiff_RC_SRCS variable will contain paths to files produced by rcc

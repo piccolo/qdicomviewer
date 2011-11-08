@@ -24,12 +24,13 @@ private:
   qdicomimagewidget* _dicomwidget;
 
   QSlider* _slider;
+  public slots:
+  void setFile(int);
 
  public:
  
   qdicomfolderwidget(QString f, QWidget* parent=0);
-  
-  
+    
 };
 
 #endif 

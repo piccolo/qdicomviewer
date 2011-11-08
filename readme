@@ -1,1 +1,9 @@
 qdicomviewer
+
+TODO : 
+     - qdicomimagewidget/qdicomfolderwidget: 
+       - Problème memoire reallocation buffer à chaque changement d'image
+       - conserver le window width/height entre chaque image
+       - detecter serie temporelle/spatiale
+       
+     - qdicomdir

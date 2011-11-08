@@ -50,19 +50,19 @@ class qdicomimagewidget : public QWidget
    public slots:
    /* void setWindowWidth(int p); */
    /* void setWindowCenter(int p); */
-
+   
  protected:
    virtual void mousePressEvent(QMouseEvent* e);
    virtual void mouseMoveEvent(QMouseEvent* e);
  public:
    qdicomimagewidget(QString f,QWidget *parent = 0 );
    
+    void paintEvent(QPaintEvent*);
    void setImage(QString filename);
-   void paintEvent(QPaintEvent*);
-   
    QPoint _lastMousePosition;
    
    inline QImage & image();
+  
 };
 
 QImage & qdicomimagewidget::image() { return _qimage; }

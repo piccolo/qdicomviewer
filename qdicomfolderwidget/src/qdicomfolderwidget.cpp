@@ -10,16 +10,19 @@ qdicomfolderwidget::qdicomfolderwidget(QString folder, QWidget* parent)
 {
   qDebug() << "Folder name : "<< _folder << endl;
   if (load_folder()) qDebug() << "Glop \n";
-  _dicomwidget = new qdicomimagewidget(_list.at(0).fileName(),parent);
-  qDebug() << _list.at(0).fileName();
+  _dicomwidget = new qdicomimagewidget(_list.at(0).filePath(),parent);
+  qDebug() << _list.at(0).filePath();
   // PROBLEME _dcmFileFormat->LoadFile(_file);
   _slider = new QSlider(Qt::Horizontal);
-  _slider->setRange(0,_list.size());
+  _slider->setRange(0,_list.size()-1);
   _slider->setValue(0);
   QVBoxLayout * layout = new QVBoxLayout;
   layout->addWidget(_dicomwidget);
   layout->addWidget(_slider);
   setLayout(layout);
+  connect(_slider, SIGNAL(valueChanged(int)),
+	  this, SLOT(setFile(int)));//setValue(int)));
+
 } 
 
 bool qdicomfolderwidget::load_folder() {
@@ -43,3 +46,6 @@ bool qdicomfolderwidget::load_folder() {
   return true;
 }
 
+void qdicomfolderwidget::setFile(int n) {
+  _dicomwidget->setImage(_list.at(n).filePath());
+}

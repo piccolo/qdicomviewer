@@ -24,26 +24,40 @@
 
 #include "dicom_image.h"
 
+dicom_image::dicom_image() {
+   _file = 0;
+   _dcmFileFormat = new DcmFileFormat();
+}
+
 dicom_image::dicom_image(const char* file)
    : _file(file)
 {
+   _dcmFileFormat = new DcmFileFormat();
    load_image();
 }
 
-bool dicom_image::load_image() {
-   printf("load image\n");
-   _dcmFileFormat = new DcmFileFormat();
+bool dicom_image::load_image(const char* file) {
+   _file = file;
+   printf("file : %s\n",_file);
    OFCondition cond = _dcmFileFormat->loadFile(_file);
-   printf("cond \n");
    if (cond.good()) {
-      printf("cond.good() \n");
       _image = new DicomImage(_file);
-      printf("_image status %d \n", _image->getStatus());
       if (_image->getStatus() == EIS_Normal) {
-	 printf("glop EIS NORMAL \n");
 	 _width = _image->getWidth();
 	 _height = _image->getHeight();
-	 printf("toot %s %d %d \n ", _file,_width, _height);
+      }
+   }
+   return true;
+}
+
+bool dicom_image::load_image() {
+   
+   OFCondition cond = _dcmFileFormat->loadFile(_file);
+   if (cond.good()) {
+      _image = new DicomImage(_file);
+      if (_image->getStatus() == EIS_Normal) {
+	 _width = _image->getWidth();
+	 _height = _image->getHeight();
 	 // const DiPixel* dmp=NULL;
 	 // dmp = _image->getInterData();
 	 // pixelData = new unsigned char[_width*height];

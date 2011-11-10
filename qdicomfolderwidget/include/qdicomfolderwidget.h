@@ -30,6 +30,7 @@ private:
  public:
  
   qdicomfolderwidget(QString f, QWidget* parent=0);
+  ~qdicomfolderwidget() {delete _dicomwidget; delete _slider;}
     
 };
 

@@ -34,28 +34,35 @@ qdicomimagewidget::qdicomimagewidget( QString filename, QWidget *parent)
    : QWidget(parent), _filename(filename)
 {
    qDebug() << "filename toto : " << filename;
+   _qimagebuffer = 0;
+   _qimage =  0 ; //new QImage();
+   _dcmimage = new dicom_image();;
    setImage(_filename);
 }
 
 void qdicomimagewidget::setImage(QString filename) {
    _filename = filename;
    qDebug() << _filename.toStdString().c_str();
-   _dcmimage = new dicom_image(_filename.toStdString().c_str());
+   _dcmimage->load_image(_filename.toStdString().c_str());
    qDebug() << _dcmimage->get_width() << " x " << _dcmimage->get_height();
-   setFixedSize(_dcmimage->get_width(), _dcmimage->get_height());
-   _qimagesize = _dcmimage->get_width() * _dcmimage->get_height();
-   _qimagebuffer = new uchar[_qimagesize];
+   if (_qimagebuffer == 0) {
+      setFixedSize(_dcmimage->get_width(),_dcmimage->get_height());
+      _qimagesize = _dcmimage->get_width() * _dcmimage->get_height();
+      _qimagebuffer = new uchar[_qimagesize];
+   }
    _dcmimage->get_image()->setMinMaxWindow();
    _dcmimage->get_image()->getWindow(_windowcenter, _windowwidth);
    _dcmimage->get_image()->getOutputData(_qimagebuffer,_qimagesize,8);
-   _qimage= QImage(_qimagebuffer, _dcmimage->get_width(), _dcmimage->get_height(), QImage::Format_Indexed8);
+   if (_qimage != 0)
+      delete _qimage;
+   _qimage = new QImage(_qimagebuffer, _dcmimage->get_width(), _dcmimage->get_height(), QImage::Format_Indexed8);
+   delete _dcmimage;
    update();
-   //emit setImage(filename);
 }
 
 void qdicomimagewidget::paintEvent(QPaintEvent* e) {
    QPainter painter(this);
-   painter.drawImage(0,0,_qimage);
+   painter.drawImage(0,0,*_qimage);
 }
 
 void qdicomimagewidget::mousePressEvent(QMouseEvent* e) {
@@ -65,6 +72,7 @@ void qdicomimagewidget::mousePressEvent(QMouseEvent* e) {
 
 void qdicomimagewidget::mouseMoveEvent(QMouseEvent* e) {
    e->accept();
+   _dcmimage->load_image(_filename.toStdString().c_str());
    QPoint tmp = e->pos();
    QPoint delta = _lastMousePosition - tmp;
    qDebug() << delta.x() << " x " << delta.y() ;
@@ -83,9 +91,11 @@ void qdicomimagewidget::mouseMoveEvent(QMouseEvent* e) {
    _lastMousePosition = tmp;
    _dcmimage->get_image()->setWindow(_windowcenter,_windowwidth);
    _dcmimage->get_image()->getOutputData(_qimagebuffer,_qimagesize,8);
-   _qimage= QImage(_qimagebuffer, _dcmimage->get_width(), _dcmimage->get_height(), QImage::Format_Indexed8);
    
-   qDebug() << "window  : "<< _windowcenter << " , " << _windowwidth;
+    if (_qimage != 0)
+      delete _qimage;
+    _qimage = new QImage(_qimagebuffer, _dcmimage->get_width(), _dcmimage->get_height(), QImage::Format_Indexed8);
+    qDebug() << "window  : "<< _windowcenter << " , " << _windowwidth;
    update();
 }
 

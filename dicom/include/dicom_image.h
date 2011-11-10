@@ -44,10 +44,12 @@ class dicom_image {
    
    float* _dcm_data;
  public :
+   dicom_image();
    dicom_image(const char* file);
-   
+   ~dicom_image() { delete _image; delete _dcmFileFormat; delete _file;}
    bool load_image();
 
+   bool load_image(const char* file);
    inline unsigned int get_width() { return _width;}
    
    inline unsigned int get_height() { return _height; }

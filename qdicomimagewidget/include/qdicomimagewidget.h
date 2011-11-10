@@ -42,7 +42,7 @@ class qdicomimagewidget : public QWidget
    
    uchar* _qimagebuffer;
    int _qimagesize;
-   QImage _qimage;
+   QImage* _qimage;
    
    double _windowcenter;
    double _windowwidth;
@@ -56,15 +56,15 @@ class qdicomimagewidget : public QWidget
    virtual void mouseMoveEvent(QMouseEvent* e);
  public:
    qdicomimagewidget(QString f,QWidget *parent = 0 );
-   
-    void paintEvent(QPaintEvent*);
+   ~qdicomimagewidget() { delete _qimagebuffer; delete _dcmimage;}
+   void paintEvent(QPaintEvent*);
    void setImage(QString filename);
    QPoint _lastMousePosition;
    
-   inline QImage & image();
+   inline QImage * image();
   
 };
 
-QImage & qdicomimagewidget::image() { return _qimage; }
+QImage* qdicomimagewidget::image() { return _qimage; }
 
 #endif

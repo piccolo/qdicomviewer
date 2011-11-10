@@ -1,0 +1,10 @@
+# QDICOMVIEWER
+* qdicomimagewidget/qdicomfolderwidget
+** [#A] Keep same window width/center between each image
+** [#A] Change load folder
+*** [#B] Create class dicom_list allowing to open a dicom folder
+*** [#B] Create some rule to sort this list (time,spatial)
+*** [#C] Need to fetch dicom header with patient information and image information
+ 
+ 
+ 

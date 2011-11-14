@@ -34,6 +34,7 @@ dicom_image::dicom_image(const char* file)
 {
    _dcmFileFormat = new DcmFileFormat();
    load_image();
+   load_properties();
 }
 
 bool dicom_image::load_image(const char* file) {
@@ -48,6 +49,10 @@ bool dicom_image::load_image(const char* file) {
       }
    }
    return true;
+}
+
+void dicom_image::load_properties() {
+   _properties = new dicom_properties(_file);
 }
 
 bool dicom_image::load_image() {

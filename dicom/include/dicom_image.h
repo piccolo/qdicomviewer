@@ -30,7 +30,7 @@
 #include <dcmimage.h>
 #include <dcfilefo.h>
 #include <dcdeftag.h>
-
+#include "dicom_properties.h"
 
 class dicom_image {
  private :
@@ -38,6 +38,8 @@ class dicom_image {
    unsigned int _width;
    unsigned int _height;
    
+   dicom_properties * _properties;
+
    DcmFileFormat* _dcmFileFormat;
    DicomImage* _image;
    EP_Representation _dcm_rep;
@@ -50,6 +52,9 @@ class dicom_image {
    bool load_image();
 
    bool load_image(const char* file);
+   
+   void load_properties();
+   
    inline unsigned int get_width() { return _width;}
    
    inline unsigned int get_height() { return _height; }

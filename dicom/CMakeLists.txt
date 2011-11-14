@@ -21,3 +21,5 @@ add_definitions(-g -Wall -Wno-deprecated -DHAVE_CONFIG)
 add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_SRCS})
 
 target_link_libraries(${PROJECT_NAME} ${LINK_LIBRARIES})
+
+add_subdirectory(test)
